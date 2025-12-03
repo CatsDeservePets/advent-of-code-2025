@@ -19,12 +19,14 @@ invalid() {
 	# Numbers of uneven length can't consist of repeated sequences only
 	[ $((len % 2)) -ne 0 ] && return 1
 
-	left=
+	half=$((len / 2))
+
+	left=$s
 	right=$s
 	j=0
-	while [ "$j" -lt "$((len / 2))" ]; do
-		# Move first char from $right to the end of $left
-		left=$left${right%"${right#?}"}
+	while [ "$j" -lt "$half" ]; do
+		# Drop last char of $left and first char of $right
+		left=${left%?}
 		right=${right#?}
 		: $((j += 1))
 	done
