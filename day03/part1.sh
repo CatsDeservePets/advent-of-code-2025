@@ -13,14 +13,15 @@ if [ ! -r "$file" ]; then
 	exit 1
 fi
 
-total=0
-while IFS= read -r line; do
-	nums=$(printf '%s\n' "$line" | sed 's/./& /g')
+joltage=0
+
+while IFS= read -r bank; do
+	cells=$(printf '%s\n' "$bank" | sed 's/./& /g')
 	bat_l=0
 	bat_r=0
 	i=0
-	range=$((${#line} - 1))
-	for n in $nums; do
+	range=$((${#bank} - 1))
+	for n in $cells; do
 		if [ "$n" -gt "$bat_l" ] && [ "$i" -lt "$range" ]; then
 			bat_l=$n
 			bat_r=0
@@ -29,9 +30,10 @@ while IFS= read -r line; do
 		fi
 		: $((i += 1))
 	done
+
 	jolts=$bat_l$bat_r
-	: $((total += jolts))
-	printf 'In %s, the largest joltage you can produce is %d.\n' "$line" "$jolts"
+	: $((joltage += jolts))
+	printf 'In %s, the largest joltage you can produce is %d.\n' "$bank" "$jolts"
 done <"$file"
 
-printf 'The total joltage is: %d\n' "$total"
+printf 'The total joltage is: %d\n' "$joltage"
